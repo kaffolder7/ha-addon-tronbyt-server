@@ -19,8 +19,9 @@ jobs:
       - name: Test build
         uses: home-assistant/builder@2025.11.0
         with:
-          args: |
+          args: >-
             --test
             --amd64
             --aarch64
             --target .
+            --image ghcr.io/${{ github.repository_owner }}/{arch}-app-tronbyt-server

@@ -27,8 +27,9 @@ jobs:
       - name: Build & Publish (amd64 + aarch64)
         uses: home-assistant/builder@2025.11.0
         with:
-          args: |
-            --all
+          args: >-
+            --amd64
+            --aarch64
             --target .
             --image ghcr.io/${{ github.repository_owner }}/{arch}-app-tronbyt-server
             --version ${{ github.ref_name }}
