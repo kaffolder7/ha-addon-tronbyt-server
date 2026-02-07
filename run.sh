@@ -1,4 +1,4 @@
-#!/usr/bin/with-contenv bashio
+#!/bin/sh
 set -e
 
 echo "[Tronbyt App] Starting up..."

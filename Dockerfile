@@ -7,7 +7,7 @@ FROM alpine:3.21
 
 # Install runtime dependencies
 #   `jq` used for parsing Home Assistant options.json
-RUN apk add --no-cache jq bash ca-certificates tzdata
+RUN apk add --no-cache jq ca-certificates tzdata dos2unix
 
 # Copy everything from /app in the tronbyt image (binary + static assets)
 COPY --from=tronbyt /app/ /app/
@@ -15,9 +15,9 @@ COPY --from=tronbyt /app/ /app/
 # Ensure the binary is executable
 RUN chmod +x /app/tronbyt-server
 
-# Copy our startup script
+# Copy our startup script and ensure LF line endings
 COPY run.sh /
-RUN chmod a+x /run.sh
+RUN dos2unix /run.sh && chmod a+x /run.sh
 
 WORKDIR /app
 
