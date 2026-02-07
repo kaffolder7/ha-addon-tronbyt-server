@@ -2,7 +2,7 @@
 ARG BUILD_FROM=ghcr.io/tronbyt/server:2
 FROM $BUILD_FROM AS tronbyt
 
-# Stage 2: Build the actual add-on using Alpine (has shell, apk, etc.)
+# Stage 2: Build the actual app using Alpine (has shell, apk, etc.)
 FROM alpine:3.21
 
 # Install runtime dependencies
