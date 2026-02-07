@@ -3,6 +3,7 @@
 ## 0.1.5
 - Added localization for application configuration settings with German, English, and Spanish translations to improve accessibility.
 - Cleaned up `README.md` by updating installation instructions and adding a link to the upstream project.
+- Organized `config.yaml` to match [HA documentation](https://developers.home-assistant.io/docs/apps/configuration/) and improve readability and maintainability.
 
 ## 0.1.4
 - Update `config.yaml` to remove risky mounts + improve secrets handling

@@ -1,12 +1,11 @@
 ---
 name: "Tronbyt Server"
-version: "0.1.4"
+version: "0.1.5"
 slug: "tronbyt_server"
 description: "Manage your apps on your Tronbyt (flashed Tidbyt) completely locally without relying on Tidbyt's backend servers."
 arch:
   - aarch64
   - amd64
-
 url: "https://github.com/kaffolder7/ha-app-tronbyt-server"
 startup: application
 webui: "http://[HOST]:[PORT:8000]"
@@ -17,10 +16,6 @@ ports_description:
   8000/tcp: "Tronbyt Server Web UI"
 homeassistant: 2026.2.0
 apparmor: true
-
-# map:
-#   - share:rw
-
 options:
   production: true
   enable_user_registration: false
@@ -35,7 +30,6 @@ schema:
   system_apps_repo: "str?"
 image: "ghcr.io/kaffolder7/{arch}-app-tronbyt-server"
 panel_icon: "mdi:server-network"
-# panel_title: "Tronbyt Server"
 
 # Let Docker init handle zombie reaping (Tronbyt’s own compose uses init: true)
 init: true
