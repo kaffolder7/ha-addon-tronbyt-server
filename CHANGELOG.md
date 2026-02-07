@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.2
+- Standardize published container image naming to the Home Assistant convention: `ghcr.io/kaffolder7/{arch}-app-tronbyt-server:<version>`.
+- Add-on now pulls pre-built images from GHCR (no local build required on install/update).
+- Update CI builder arguments formatting so architecture flags are correctly passed during workflow runs.
+
 ## 0.1.1
 - Add `webui` metadata so Home Assistant shows an "Open Web UI" button for quick access to the Tronbyt UI (`http://[HOST]:[PORT:8000]`).
 
