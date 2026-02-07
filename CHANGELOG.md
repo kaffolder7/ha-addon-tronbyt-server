@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.4
+- Update `config.yaml` to remove risky mounts + improve secrets handling
+- Add a custom `apparmor.txt` (security score + defense-in-depth)
+- Supply-chain: pin `tronbyt/server` upstream image version to `2.1.2`.
+
 ## 0.1.3
 - Fix container publishing to [GitHub Container Registry](https://github.com/features/packages) so images are published under the correct repository path (no duplicated `ghcr.io/kaffolder7/` prefix).
 
