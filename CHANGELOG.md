@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.1.3
+- Fix container publishing to [GitHub Container Registry](https://github.com/features/packages) so images are published under the correct repository path (no duplicated `ghcr.io/kaffolder7/` prefix).
+
 ## 0.1.2
 - Standardize published container image naming to the Home Assistant convention: `ghcr.io/kaffolder7/{arch}-app-tronbyt-server:<version>`.
 - Add-on now pulls pre-built images from GHCR (no local build required on install/update).
