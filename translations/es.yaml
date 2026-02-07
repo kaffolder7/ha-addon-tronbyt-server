@@ -1,0 +1,19 @@
+---
+configuration:
+  production:
+    name: Producción
+    description: Ejecute la aplicación en modo de producción.
+  enable_user_registration:
+    name: Habilitar el registro de usuarios
+    description: Permitir el registro abierto de usuarios.
+  single_user_auto_login:
+    name: Inicio de sesión automático para un solo usuario
+    description: Habilite el inicio de sesión automático para configuraciones de un solo usuario.
+  github_token:
+    name: Token de GitHub
+    description: Especifique el token de GitHub para acceder a los repositorios privados de la aplicación.
+  system_apps_repo:
+    name: Repositorio de aplicaciones del sistema
+    description: Especifique la URL del repositorio de Git para las aplicaciones del sistema.
+network:
+  8000/tcp: Interfaz de usuario web del servidor Tronbyt
