@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.1.5
+- Added localization for application configuration settings with German, English, and Spanish translations to improve accessibility.
+
 ## 0.1.4
 - Update `config.yaml` to remove risky mounts + improve secrets handling
 - Add a custom `apparmor.txt` (security score + defense-in-depth)
