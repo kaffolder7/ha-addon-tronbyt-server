@@ -31,6 +31,7 @@ jobs:
             --amd64
             --aarch64
             --target .
+            --docker-hub ghcr.io/${{ github.repository_owner }}
             --image {arch}-app-tronbyt-server
             --version ${{ github.ref_name }}
             --no-latest
