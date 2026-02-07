@@ -2,7 +2,7 @@
 
 Run [Tronbyt Server](https://github.com/tronbyt/server) as a Home Assistant app to manage your Tronbyt/Tidbyt displays locally.
 
-![Build Status](https://img.shields.io/github/actions/workflow/status/kaffolder7/ha-app-tronbyt-server/test.yml) ![Supports aarch64 Architecture][aarch64-shield] ![Supports amd64 Architecture][amd64-shield]
+![Supports aarch64 Architecture][aarch64-shield] ![Supports amd64 Architecture][amd64-shield] ![Build Status](https://img.shields.io/github/actions/workflow/status/kaffolder7/ha-app-tronbyt-server/test.yml)
 
 ## Quick Install (Local App)
 
