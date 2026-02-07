@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/with-contenv bashio
 set -e
 
 echo "[Tronbyt App] Starting up..."
@@ -52,7 +52,7 @@ fi
 # ---------------------------------------------------------------
 # HA apps persist /data across restarts.
 # Tronbyt server stores its data in /app/data.
-# We ensure /app/data points to a persistent location.
+# Therefore, ensure /app/data points to a persistent location.
 PERSISTENT_DIR="/data/tronbyt"
 mkdir -p "$PERSISTENT_DIR"
 

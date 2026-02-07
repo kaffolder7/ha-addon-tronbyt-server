@@ -1,0 +1,28 @@
+# EditorConfig – https://editorconfig.org
+root = true
+
+# Defaults for all files
+[*]
+end_of_line = lf
+insert_final_newline = true
+charset = utf-8
+indent_style = space
+indent_size = 2
+trim_trailing_whitespace = true
+
+# Shell scripts
+[*.sh]
+end_of_line = lf
+
+# Dockerfiles
+[Dockerfile]
+end_of_line = lf
+
+# YAML files (config.yaml, build.yaml, repository.yaml)
+[*.yaml]
+end_of_line = lf
+
+# Markdown docs
+[*.md]
+end_of_line = lf
+trim_trailing_whitespace = false

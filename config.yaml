@@ -1,9 +1,9 @@
 ---
 name: "Tronbyt Server"
 description: "Manage your apps on your Tronbyt (flashed Tidbyt) completely locally without relying on Tidbyt's backend servers."
-version: "2.0.0"
+version: "1.0.0"
 slug: "tronbyt_server"
-url: "https://github.com/tronbyt/server"
+url: "https://github.com/kaffolder7/ha-addon-tronbyt-server"
 init: false
 arch:
   - aarch64
