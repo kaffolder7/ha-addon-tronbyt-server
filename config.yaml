@@ -11,6 +11,7 @@ arch:
   - amd64
 startup: application
 boot: auto
+webui: "http://[HOST]:[PORT:8000]"
 ports:
   8000/tcp: 8000
 ports_description:
