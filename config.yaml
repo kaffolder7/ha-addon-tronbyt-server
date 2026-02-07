@@ -1,7 +1,7 @@
 ---
 name: "Tronbyt Server"
 description: "Manage your apps on your Tronbyt (flashed Tidbyt) completely locally without relying on Tidbyt's backend servers."
-version: "1.0.0"
+version: "1.0.1"
 slug: "tronbyt_server"
 url: "https://github.com/kaffolder7/ha-addon-tronbyt-server"
 init: false
@@ -10,6 +10,7 @@ arch:
   - amd64
 startup: application
 boot: auto
+webui: "http://[HOST]:[PORT:8000]"
 ports:
   8000/tcp: 8000
 ports_description:
