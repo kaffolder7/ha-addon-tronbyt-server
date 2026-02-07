@@ -1,0 +1,30 @@
+---
+name: "Tronbyt Server"
+description: "Manage your apps on your Tronbyt (flashed Tidbyt) completely locally without relying on Tidbyt's backend servers."
+version: "2.0.0"
+slug: "tronbyt_server"
+url: "https://github.com/tronbyt/server"
+init: false
+arch:
+  - aarch64
+  - amd64
+startup: application
+boot: auto
+ports:
+  8000/tcp: 8000
+ports_description:
+  8000/tcp: "Tronbyt Server Web UI"
+map:
+  - share:rw
+options:
+  production: true
+  enable_user_registration: false
+  single_user_auto_login: false
+  github_token: ""
+  system_apps_repo: ""
+schema:
+  production: bool
+  enable_user_registration: bool
+  single_user_auto_login: bool
+  github_token: "str?"
+  system_apps_repo: "str?"
