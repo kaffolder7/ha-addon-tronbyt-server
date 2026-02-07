@@ -2,6 +2,8 @@
 
 Run [Tronbyt Server](https://github.com/tronbyt/server) as a Home Assistant app to manage your Tronbyt/Tidbyt displays locally.
 
+![Supports aarch64 Architecture][aarch64-shield] ![Supports amd64 Architecture][amd64-shield]
+
 ## Quick Install (Local App)
 
 1. **Access your apps directory.** Use the Samba or SSH app to access your Home Assistant filesystem. The local apps directory is at `/addons/`.
@@ -33,3 +35,6 @@ Alternatively, if you host this on GitHub, you can add it as a custom repository
 
 - `aarch64` (Home Assistant Green, RPi 4/5)
 - `amd64` (x86-64 PCs)
+
+[aarch64-shield]: https://img.shields.io/badge/aarch64-yes-green.svg
+[amd64-shield]: https://img.shields.io/badge/amd64-yes-green.svg
