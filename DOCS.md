@@ -14,10 +14,10 @@ Run [Tronbyt Server](https://github.com/tronbyt/server) inside Home Assistant so
 1. Open **Settings -> Apps -> Tronbyt Server**.
 2. Click **Start**.
 3. Open **Web UI** from the app page, or browse to:
-   - `http://<home-assistant-ip>:8000`
+   - `http://<home-assistant-ip>:<configured-host-port>`
 4. Point your Tronbyt/Tidbyt firmware at that server URL.
 
-Example: `http://192.168.1.100:8000`
+Example: `http://192.168.1.100:8000` (if host port is set to `8000`)
 
 ## Configuration Options
 
@@ -35,9 +35,10 @@ Notes:
 
 ## Network
 
-- Default port: `8000/tcp`
+- Internal app port: `8000/tcp`
+- Host port mapping is configurable in the add-on Network settings.
 - Home Assistant Web UI link is configured automatically.
-- Devices on your LAN must be able to reach Home Assistant on port `8000`.
+- Devices on your LAN must be able to reach Home Assistant on the configured host port.
 
 ## Data & Persistence
 

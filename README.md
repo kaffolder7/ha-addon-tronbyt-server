@@ -29,7 +29,7 @@ Or add it directly:
 
 ## Usage
 
-- Open the app page and use **Open Web UI** (if enabled), or check the app documentation for access details.
+- Open the app page and use **Open Web UI** (if enabled), or use the configured host port mapping for `8000/tcp`.
 - View logs from the app page to troubleshoot startup/config issues.
 
 ## Support

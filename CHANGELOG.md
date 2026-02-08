@@ -6,6 +6,7 @@
 - Switched AppArmor profile from `complain` mode to enforced mode.
 - Removed static watchdog metadata to avoid restart loops when `/health` behavior differs across Tronbyt versions.
 - Updated docs to describe `/health` as an optional endpoint depending on the installed Tronbyt release.
+- Changed `8000/tcp` host mapping from fixed `8000` to configurable (`null`) to reduce port-collision startup failures.
 
 ## 0.1.5
 - Added localization for application configuration settings with German, English, and Spanish translations to improve accessibility.

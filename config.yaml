@@ -11,7 +11,7 @@ startup: application
 webui: "http://[HOST]:[PORT:8000]"
 boot: auto
 ports:
-  8000/tcp: 8000
+  8000/tcp: null
 ports_description:
   8000/tcp: "Tronbyt Server Web UI"
 homeassistant: 2026.2.0
