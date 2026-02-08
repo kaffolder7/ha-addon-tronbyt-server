@@ -1,47 +1,66 @@
-# Tronbyt Server - Home Assistant App
+# Tronbyt Server
 
-## Overview
+Run [Tronbyt Server](https://github.com/tronbyt/server) inside Home Assistant so your Tronbyt (flashed Tidbyt) devices can be managed locally on your network.
 
-This app runs [Tronbyt Server](https://github.com/tronbyt/server) as a Home Assistant app, letting you manage your Tronbyt (flashed Tidbyt) displays entirely locally — no cloud dependency required.
+## What This App Provides
 
-## Installation
+- A Home Assistant-packaged Tronbyt Server instance
+- Web UI exposed on port `8000`
+- Persistent storage for server data across restarts and upgrades
+- Optional support for private/custom app repositories
 
-1. Copy (or clone) this repository into your Home Assistant `/addons` directory.
-2. In Home Assistant, go to **Settings → Apps → App Store**.
-3. Click the three-dot menu (top right) and select **Check for updates**.
-4. Find **Tronbyt Server** under **Local add-ons** and click **Install**.
-5. Once installed, click **Start**.
-6. Access the Tronbyt web UI at `http://<your-HA-IP>:8000`.
+## After Installation
 
-## Default Login
+1. Open **Settings -> Apps -> Tronbyt Server**.
+2. Click **Start**.
+3. Open **Web UI** from the app page, or browse to:
+   - `http://<home-assistant-ip>:8000`
+4. Point your Tronbyt/Tidbyt firmware at that server URL.
 
-- **Username:** `admin`
-- **Password:** `password`
+Example: `http://192.168.1.100:8000`
 
-Change these immediately after first login.
-
-## Configuration
+## Configuration Options
 
 | Option | Default | Description |
 |---|---|---|
-| `production` | `true` | Run in production mode |
-| `enable_user_registration` | `false` | Allow open user registration |
-| `single_user_auto_login` | `false` | Auto-login for single-user setups |
-| `github_token` | `""` | GitHub token for accessing private app repos |
-| `system_apps_repo` | `""` | Custom Git repository URL for system apps |
+| `production` | `true` | Runs Tronbyt in production mode (recommended). |
+| `enable_user_registration` | `false` | Allows open account registration in the Tronbyt UI. |
+| `single_user_auto_login` | `false` | Automatically signs in a single-user setup. |
+| `github_token` | `""` | GitHub token used when accessing private app repositories. |
+| `system_apps_repo` | `""` | Optional Git URL for a custom system apps repository. |
 
-## Data Persistence
-
-All Tronbyt data (database, device configs, app caches) is stored persistently across app restarts and updates. The data lives in the app's `/data/tronbyt` directory.
+Notes:
+- Keep `enable_user_registration` disabled unless you specifically need it.
+- `github_token` is optional and only needed for private repositories.
 
 ## Network
 
-The app exposes port **8000** for the web UI. Your Tronbyt/Tidbyt devices need to be able to reach this port on your Home Assistant's IP address.
+- Default port: `8000/tcp`
+- Home Assistant Web UI link is configured automatically.
+- Devices on your LAN must be able to reach Home Assistant on port `8000`.
 
-When configuring your Tronbyt device firmware, use your Home Assistant's IP and port 8000 as the server URL (e.g., `http://192.168.1.100:8000`).
+## Data & Persistence
+
+This app persists Tronbyt data under:
+
+- `/data/tronbyt`
+
+The startup script maps Tronbyt's internal data path (`/app/data`) to this persistent location, so state is retained across container restarts and updates.
+
+## Health & Logs
+
+- Watchdog endpoint: `http://<home-assistant-ip>:8000/health`
+- Runtime logs: **Settings -> Apps -> Tronbyt Server -> Logs**
 
 ## Troubleshooting
 
-- **Can't access the web UI?** Make sure port 8000 is not disabled in the app's network configuration.
-- **Devices can't connect?** Ensure your Tronbyt devices are on the same network and can reach the HA IP on port 8000.
-- **Check logs:** Go to the app's **Log** tab for detailed startup and runtime information.
+- Web UI unavailable:
+  - Confirm the app is running.
+  - Check Home Assistant host IP and port `8000` reachability.
+  - Review app logs for startup errors.
+- Device connection issues:
+  - Verify device firmware points to `http://<home-assistant-ip>:8000`.
+  - Ensure device and Home Assistant are on routable networks.
+- Repository/app fetch failures:
+  - If using private repos, validate `github_token`.
+  - If using `system_apps_repo`, verify the Git URL is reachable and valid.
