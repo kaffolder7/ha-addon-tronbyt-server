@@ -1,6 +1,6 @@
 #include <tunables/global>
 
-profile tronbyt_server flags=(attach_disconnected,mediate_deleted,complain) {
+profile tronbyt_server flags=(attach_disconnected,mediate_deleted) {
   #include <abstractions/base>
 
   # Allow basic file ops

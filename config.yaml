@@ -33,6 +33,3 @@ panel_icon: "mdi:server-network"
 
 # Let Docker init handle zombie reaping (Tronbyt’s own compose uses init: true)
 init: true
-
-# Optional: watchdog (if /health is reachable)
-watchdog: "http://[HOST]:[PORT:8000]/health"

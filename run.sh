@@ -47,6 +47,11 @@ if [ -n "$SYSTEM_APPS_REPO" ] && [ "$SYSTEM_APPS_REPO" != "null" ]; then
   export SYSTEM_APPS_REPO
 fi
 
+# Hide credentials if a URL includes userinfo.
+redact_url_credentials() {
+  echo "$1" | sed -E 's#(https?://)[^/@]+@#\1***@#'
+}
+
 # ---------------------------------------------------------------
 # Set up persistent data storage
 # ---------------------------------------------------------------
@@ -59,7 +64,7 @@ mkdir -p "$PERSISTENT_DIR"
 # If /app/data exists and is not a symlink, migrate its contents
 if [ -d "/app/data" ] && [ ! -L "/app/data" ]; then
   echo "[Tronbyt App] Migrating existing data to persistent storage..."
-  cp -a /app/data/. "$PERSISTENT_DIR/" 2>/dev/null || true
+  cp -a /app/data/. "$PERSISTENT_DIR/"
   rm -rf /app/data
 fi
 
@@ -70,7 +75,11 @@ echo "[Tronbyt App] Configuration:"
 echo "  PRODUCTION=$PRODUCTION"
 echo "  ENABLE_USER_REGISTRATION=$ENABLE_USER_REGISTRATION"
 echo "  SINGLE_USER_AUTO_LOGIN=$SINGLE_USER_AUTO_LOGIN"
-echo "  SYSTEM_APPS_REPO=${SYSTEM_APPS_REPO:-<default>}"
+if [ -n "$SYSTEM_APPS_REPO" ] && [ "$SYSTEM_APPS_REPO" != "null" ]; then
+  echo "  SYSTEM_APPS_REPO=$(redact_url_credentials "$SYSTEM_APPS_REPO")"
+else
+  echo "  SYSTEM_APPS_REPO=<default>"
+fi
 echo "  Data directory: $PERSISTENT_DIR"
 echo ""
 

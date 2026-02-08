@@ -49,7 +49,7 @@ The startup script maps Tronbyt's internal data path (`/app/data`) to this persi
 
 ## Health & Logs
 
-- Watchdog endpoint: `http://<home-assistant-ip>:8000/health`
+- Health endpoint (if exposed by current Tronbyt release): `http://<home-assistant-ip>:8000/health`
 - Runtime logs: **Settings -> Apps -> Tronbyt Server -> Logs**
 
 ## Troubleshooting
