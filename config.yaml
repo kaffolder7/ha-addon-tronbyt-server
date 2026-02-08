@@ -14,7 +14,6 @@ ports:
   8000/tcp: null
 ports_description:
   8000/tcp: "Tronbyt Server Web UI"
-homeassistant: 2026.2.0
 apparmor: true
 options:
   production: true
