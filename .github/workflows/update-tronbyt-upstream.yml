@@ -71,6 +71,7 @@ jobs:
       - name: Update pinned upstream version in tracked files
         if: steps.plan.outputs.update_required == 'true'
         env:
+          CURRENT_UPSTREAM: ${{ steps.plan.outputs.current_upstream }}
           NEW_UPSTREAM: ${{ steps.plan.outputs.new_upstream }}
           NEXT_APP_VERSION: ${{ steps.plan.outputs.next_app_version }}
         run: |
@@ -79,10 +80,20 @@ jobs:
           perl -i -pe 's#^ARG BUILD_FROM=ghcr\.io/tronbyt/server:[^[:space:]]+#ARG BUILD_FROM=ghcr.io/tronbyt/server:$ENV{NEW_UPSTREAM}#' Dockerfile
           perl -i -pe 's#^(  aarch64: ghcr\.io/tronbyt/server:).+$#$1$ENV{NEW_UPSTREAM}#; s#^(  amd64: ghcr\.io/tronbyt/server:).+$#$1$ENV{NEW_UPSTREAM}#' build.yaml
           perl -i -pe 's#^version: "[0-9]+\.[0-9]+\.[0-9]+"#version: "$ENV{NEXT_APP_VERSION}"#' config.yaml
+          perl -0777 -i -pe '
+            my $v = $ENV{NEXT_APP_VERSION};
+            my $from = $ENV{CURRENT_UPSTREAM};
+            my $to = $ENV{NEW_UPSTREAM};
+            my $entry = "## $v\n- Bumped upstream `tronbyt/server` from `$from` to `$to`.\n- Rebuilt and published updated app images for `amd64` and `aarch64`.\n- No app configuration changes required.\n\n";
+            if ($_ !~ /^## \Q$v\E$/m) {
+              s/\A# Changelog\n\n/# Changelog\n\n$entry/ or die "CHANGELOG.md header not found";
+            }
+          ' CHANGELOG.md
 
           echo "Pinned versions after update:"
           grep -n "ghcr.io/tronbyt/server:" Dockerfile build.yaml
           grep -n '^version:' config.yaml
+          grep -n "^## ${NEXT_APP_VERSION}$" CHANGELOG.md
 
       - name: Build draft release notes markdown
         if: steps.plan.outputs.update_required == 'true'
@@ -138,6 +149,7 @@ jobs:
             - `Dockerfile`
             - `build.yaml`
             - `config.yaml`
+            - `CHANGELOG.md`
           labels: |
             dependencies
             automated-pr
