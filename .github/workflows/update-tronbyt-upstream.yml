@@ -1,0 +1,57 @@
+name: Update pinned Tronbyt Server upstream version
+
+on:
+  schedule:
+    - cron: "0 9 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update-upstream-version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Get latest Tronbyt upstream release tag
+        id: latest
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          latest_tag="$(gh api repos/tronbyt/server/releases/latest --jq '.tag_name')"
+          latest_version="${latest_tag#v}"
+          echo "tag=${latest_tag}" >> "$GITHUB_OUTPUT"
+          echo "version=${latest_version}" >> "$GITHUB_OUTPUT"
+
+      - name: Update pinned upstream version in tracked files
+        env:
+          NEW_VERSION: ${{ steps.latest.outputs.version }}
+        run: |
+          set -euo pipefail
+
+          perl -i -pe 's#^ARG BUILD_FROM=ghcr\.io/tronbyt/server:[^[:space:]]+#ARG BUILD_FROM=ghcr.io/tronbyt/server:$ENV{NEW_VERSION}#' Dockerfile
+          perl -i -pe 's#^(  aarch64: ghcr\.io/tronbyt/server:).+$#$1$ENV{NEW_VERSION}#; s#^(  amd64: ghcr\.io/tronbyt/server:).+$#$1$ENV{NEW_VERSION}#' build.yaml
+
+          echo "Pinned versions after update:"
+          grep -n "ghcr.io/tronbyt/server:" Dockerfile build.yaml
+
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          branch: chore/update-tronbyt-upstream
+          delete-branch: true
+          commit-message: "chore(deps): bump tronbyt/server to ${{ steps.latest.outputs.version }}"
+          title: "chore(deps): bump tronbyt/server to ${{ steps.latest.outputs.version }}"
+          body: |
+            Automated update of the pinned upstream image version from [tronbyt/server releases](https://github.com/tronbyt/server/releases).
+
+            Updated files:
+            - `Dockerfile`
+            - `build.yaml`
+          labels: |
+            dependencies
+            automated-pr
