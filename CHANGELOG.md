@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.7
+- upstream bump `tronbyt/server` `2.1.2` -> `2.1.3`
+- rebuilt/published architectures
+- no config changes required
+
 ## 0.1.6
 - Hardened startup data migration to prevent silent copy failures from deleting existing `/app/data` contents.
 - Redacted credentials from `system_apps_repo` in startup logs to reduce accidental secret exposure.
