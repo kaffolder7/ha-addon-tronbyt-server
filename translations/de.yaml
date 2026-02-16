@@ -2,18 +2,23 @@
 configuration:
   production:
     name: Produktion
+    # description: Konfiguration der Produktionsumgebung.
     description: Die App im Produktionsmodus ausführen.
   enable_user_registration:
     name: Benutzerregistrierung aktivieren
+    # description: Aktivieren Sie die Benutzerregistrierung für die Anwendung.
     description: Ermöglichen Sie die offene Benutzerregistrierung.
   single_user_auto_login:
     name: Automatisches Anmelden für einzelne Benutzer
+    # description: Automatische Anmeldung als einzelner Benutzer.
     description: Aktivieren Sie die automatische Anmeldung für Einzelbenutzer-Systeme.
   github_token:
     name: GitHub-Token
+    # description: GitHub-Token zur Authentifizierung.
     description: Geben Sie das GitHub-Token für den Zugriff auf private App-Repositorys an.
   system_apps_repo:
     name: System-Apps-Repository
+    # description: Git-URL zu Ihrem System-App-Repository.
     description: Geben Sie die Git-Repository-URL für Systemanwendungen an.
 network:
   8000/tcp: Tronbyt Server Web-Benutzeroberfläche
