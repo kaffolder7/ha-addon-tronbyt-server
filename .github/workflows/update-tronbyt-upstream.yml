@@ -15,6 +15,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
       - name: Get latest Tronbyt upstream release tag
         id: latest
@@ -27,31 +29,135 @@ jobs:
           echo "tag=${latest_tag}" >> "$GITHUB_OUTPUT"
           echo "version=${latest_version}" >> "$GITHUB_OUTPUT"
 
-      - name: Update pinned upstream version in tracked files
+      - name: Plan update and bump app version
+        id: plan
         env:
-          NEW_VERSION: ${{ steps.latest.outputs.version }}
+          NEW_UPSTREAM: ${{ steps.latest.outputs.version }}
         run: |
           set -euo pipefail
 
-          perl -i -pe 's#^ARG BUILD_FROM=ghcr\.io/tronbyt/server:[^[:space:]]+#ARG BUILD_FROM=ghcr.io/tronbyt/server:$ENV{NEW_VERSION}#' Dockerfile
-          perl -i -pe 's#^(  aarch64: ghcr\.io/tronbyt/server:).+$#$1$ENV{NEW_VERSION}#; s#^(  amd64: ghcr\.io/tronbyt/server:).+$#$1$ENV{NEW_VERSION}#' build.yaml
+          current_upstream="$(sed -nE 's/^ARG BUILD_FROM=ghcr\.io\/tronbyt\/server:([^[:space:]]+)/\1/p' Dockerfile | head -n1)"
+          config_version="$(sed -nE 's/^version: "([0-9]+\.[0-9]+\.[0-9]+)"/\1/p' config.yaml | head -n1)"
+          latest_tag="$(git tag -l --sort=-version:refname | grep -E '^[v]?[0-9]+\.[0-9]+\.[0-9]+$' | head -n1 | sed 's/^v//' || true)"
+
+          if [ -z "${current_upstream}" ] || [ -z "${config_version}" ]; then
+            echo "Failed to parse current versions from Dockerfile/config.yaml"
+            exit 1
+          fi
+
+          if [ -n "${latest_tag}" ]; then
+            base_version="$(printf '%s\n%s\n' "${config_version}" "${latest_tag}" | sort -V | tail -n1)"
+          else
+            base_version="${config_version}"
+          fi
+
+          IFS='.' read -r major minor patch <<< "${base_version}"
+          next_version="${major}.${minor}.$((patch + 1))"
+
+          if [ "${current_upstream}" = "${NEW_UPSTREAM}" ]; then
+            echo "No upstream update needed (${current_upstream})"
+            echo "update_required=false" >> "$GITHUB_OUTPUT"
+            echo "current_upstream=${current_upstream}" >> "$GITHUB_OUTPUT"
+            echo "new_upstream=${NEW_UPSTREAM}" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          echo "update_required=true" >> "$GITHUB_OUTPUT"
+          echo "current_upstream=${current_upstream}" >> "$GITHUB_OUTPUT"
+          echo "new_upstream=${NEW_UPSTREAM}" >> "$GITHUB_OUTPUT"
+          echo "base_app_version=${base_version}" >> "$GITHUB_OUTPUT"
+          echo "next_app_version=${next_version}" >> "$GITHUB_OUTPUT"
+
+      - name: Update pinned upstream version in tracked files
+        if: steps.plan.outputs.update_required == 'true'
+        env:
+          NEW_UPSTREAM: ${{ steps.plan.outputs.new_upstream }}
+          NEXT_APP_VERSION: ${{ steps.plan.outputs.next_app_version }}
+        run: |
+          set -euo pipefail
+
+          perl -i -pe 's#^ARG BUILD_FROM=ghcr\.io/tronbyt/server:[^[:space:]]+#ARG BUILD_FROM=ghcr.io/tronbyt/server:$ENV{NEW_UPSTREAM}#' Dockerfile
+          perl -i -pe 's#^(  aarch64: ghcr\.io/tronbyt/server:).+$#$1$ENV{NEW_UPSTREAM}#; s#^(  amd64: ghcr\.io/tronbyt/server:).+$#$1$ENV{NEW_UPSTREAM}#' build.yaml
+          perl -i -pe 's#^version: "[0-9]+\.[0-9]+\.[0-9]+"#version: "$ENV{NEXT_APP_VERSION}"#' config.yaml
 
           echo "Pinned versions after update:"
           grep -n "ghcr.io/tronbyt/server:" Dockerfile build.yaml
+          grep -n '^version:' config.yaml
+
+      - name: Build draft release notes markdown
+        if: steps.plan.outputs.update_required == 'true'
+        id: notes
+        env:
+          CURRENT_UPSTREAM: ${{ steps.plan.outputs.current_upstream }}
+          NEW_UPSTREAM: ${{ steps.plan.outputs.new_upstream }}
+          BASE_APP_VERSION: ${{ steps.plan.outputs.base_app_version }}
+          NEXT_APP_VERSION: ${{ steps.plan.outputs.next_app_version }}
+        run: |
+          set -euo pipefail
+
+          notes_file="${RUNNER_TEMP}/release-notes.md"
+          cat > "${notes_file}" <<EOF
+          # Release ${NEXT_APP_VERSION} — Release notes
+
+          ## ✨ What’s new
+          - Bumped upstream \`tronbyt/server\` from \`${CURRENT_UPSTREAM}\` to \`${NEW_UPSTREAM}\`.
+          - Updated pinned upstream image references in \`Dockerfile\` and \`build.yaml\`.
+          - Incremented app version from \`${BASE_APP_VERSION}\` to \`${NEXT_APP_VERSION}\`.
+
+          ## 🧰 Improvements
+          - Automated upstream-release detection and PR updates.
+          - Generated this draft release automatically for maintainer review.
+          - Maintained architecture compatibility for both published images.
+
+          ## 🔗 Reference
+          - Home Assistant configuration docs: \`https://developers.home-assistant.io/docs/apps/configuration/\`
+
+          ## ✅ Supported architectures
+          - \`amd64\`, \`aarch64\`
+
+          ## 🔁 Upgrade notes
+          - Restart the app after updating.
+          - Review upstream changes here: [tronbyt/server releases](https://github.com/tronbyt/server/releases)
+          - Your persistent data remains stored under \`/data/tronbyt\` (no migration expected).
+          EOF
+
+          echo "path=${notes_file}" >> "$GITHUB_OUTPUT"
 
       - name: Create pull request
+        if: steps.plan.outputs.update_required == 'true'
         uses: peter-evans/create-pull-request@v8
         with:
           branch: chore/update-tronbyt-upstream
           delete-branch: true
-          commit-message: "chore(deps): bump tronbyt/server to ${{ steps.latest.outputs.version }}"
-          title: "chore(deps): bump tronbyt/server to ${{ steps.latest.outputs.version }}"
+          commit-message: "chore(deps): bump tronbyt/server to ${{ steps.plan.outputs.new_upstream }} and app to ${{ steps.plan.outputs.next_app_version }}"
+          title: "chore(deps): bump tronbyt/server to ${{ steps.plan.outputs.new_upstream }} (app ${{ steps.plan.outputs.next_app_version }})"
           body: |
             Automated update of the pinned upstream image version from [tronbyt/server releases](https://github.com/tronbyt/server/releases).
 
             Updated files:
             - `Dockerfile`
             - `build.yaml`
+            - `config.yaml`
           labels: |
             dependencies
             automated-pr
+
+      - name: Create or update draft GitHub release
+        if: steps.plan.outputs.update_required == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ steps.plan.outputs.next_app_version }}
+          NOTES_FILE: ${{ steps.notes.outputs.path }}
+        run: |
+          set -euo pipefail
+
+          title="${TAG} - Bumped upstream Tronbyt Server dependency"
+          if gh release view "${TAG}" >/dev/null 2>&1; then
+            gh release edit "${TAG}" --draft --title "${title}" --notes-file "${NOTES_FILE}"
+          else
+            gh release create "${TAG}" --draft --title "${title}" --notes-file "${NOTES_FILE}" --target "chore/update-tronbyt-upstream"
+          fi
+
+      - name: No update needed
+        if: steps.plan.outputs.update_required != 'true'
+        run: echo "No new Tronbyt upstream release found. Skipping PR and draft release."
