@@ -21,4 +21,4 @@ configuration:
     # description: Git-URL zu Ihrem System-App-Repository.
     description: Geben Sie die Git-Repository-URL für Systemanwendungen an.
 network:
-  8000/tcp: Tronbyt Server Web-Benutzeroberfläche
+  8000/tcp: Tronbyt Web-Benutzeroberfläche/LAN-Zugriff (Host-Port setzen)

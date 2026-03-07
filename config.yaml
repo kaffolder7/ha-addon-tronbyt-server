@@ -13,7 +13,7 @@ boot: auto
 ports:
   8000/tcp: null
 ports_description:
-  8000/tcp: "Tronbyt Server Web UI"
+  8000/tcp: "Tronbyt Web UI/LAN access (set a host port to enable)"
 apparmor: true
 options:
   production: true

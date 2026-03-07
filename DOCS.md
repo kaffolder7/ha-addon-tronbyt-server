@@ -12,10 +12,14 @@ Run [Tronbyt Server](https://github.com/tronbyt/server) inside Home Assistant so
 ## After Installation
 
 1. Open **Settings -> Apps -> Tronbyt Server**.
-2. Click **Start**.
-3. Open **Web UI** from the app page, or browse to:
+2. Open **Configuration -> Network**.
+3. Enable **Show disabled ports**.
+4. Set a host port for `8000/tcp` (example: `8000`), then click **Save**.
+5. Click **Start** (or **Restart** if already running).
+6. Wait for the log line `Listening on TCP addr=:8000`.
+7. Open **Web UI** from the app page, or browse to:
    - `http://<home-assistant-ip>:<configured-host-port>`
-4. Point your Tronbyt/Tidbyt firmware at that server URL.
+8. Point your Tronbyt/Tidbyt firmware at that server URL.
 
 Example: `http://192.168.1.100:8000` (if host port is set to `8000`)
 
@@ -36,7 +40,8 @@ Notes:
 ## Network
 
 - Internal app port: `8000/tcp`
-- Host port mapping is configurable in the add-on Network settings.
+- Host port mapping defaults to disabled (`null`) to avoid port collisions.
+- You must set a host port in the add-on Network settings for **Open Web UI** and LAN device access.
 - Home Assistant Web UI link is configured automatically.
 - Devices on your LAN must be able to reach Home Assistant on the configured host port.
 
@@ -50,17 +55,18 @@ The startup script maps Tronbyt's internal data path (`/app/data`) to this persi
 
 ## Health & Logs
 
-- Health endpoint (if exposed by current Tronbyt release): `http://<home-assistant-ip>:8000/health`
+- Health endpoint (if exposed by current Tronbyt release): `http://<home-assistant-ip>:<configured-host-port>/health`
 - Runtime logs: **Settings -> Apps -> Tronbyt Server -> Logs**
 
 ## Troubleshooting
 
 - Web UI unavailable:
   - Confirm the app is running.
-  - Check Home Assistant host IP and port `8000` reachability.
+  - In **Configuration -> Network**, enable **Show disabled ports** and set `8000/tcp` to a host port (example: `8000`), then restart the app.
+  - Check Home Assistant host IP and configured host port reachability.
   - Review app logs for startup errors.
 - Device connection issues:
-  - Verify device firmware points to `http://<home-assistant-ip>:8000`.
+  - Verify device firmware points to `http://<home-assistant-ip>:<configured-host-port>`.
   - Ensure device and Home Assistant are on routable networks.
 - Repository/app fetch failures:
   - If using private repos, validate `github_token`.
