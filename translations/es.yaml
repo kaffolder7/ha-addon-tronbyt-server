@@ -21,4 +21,4 @@ configuration:
     # description: URL de Git del repositorio de las aplicaciones de su sistema.
     description: Especifique la URL del repositorio de Git para las aplicaciones del sistema.
 network:
-  8000/tcp: UI web/acceso LAN de Tronbyt (configure un puerto de host)
+  8000/tcp: UI web/acceso LAN de Tronbyt (puerto de host predeterminado: 8000)

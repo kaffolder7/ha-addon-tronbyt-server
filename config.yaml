@@ -1,6 +1,6 @@
 ---
 name: "Tronbyt Server"
-version: "0.1.10"
+version: "0.1.11"
 slug: "tronbyt_server"
 description: "Manage your apps on your Tronbyt (flashed Tidbyt) completely locally without relying on Tidbyt's backend servers."
 arch:
@@ -11,9 +11,9 @@ startup: application
 webui: "http://[HOST]:[PORT:8000]"
 boot: auto
 ports:
-  8000/tcp: null
+  8000/tcp: 8000
 ports_description:
-  8000/tcp: "Tronbyt Web UI/LAN access (set a host port to enable)"
+  8000/tcp: "Tronbyt Web UI/LAN access (default host port: 8000)"
 apparmor: true
 options:
   production: true

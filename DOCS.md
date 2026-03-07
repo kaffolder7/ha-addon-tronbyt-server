@@ -12,14 +12,17 @@ Run [Tronbyt Server](https://github.com/tronbyt/server) inside Home Assistant so
 ## After Installation
 
 1. Open **Settings -> Apps -> Tronbyt Server**.
-2. Open **Configuration -> Network**.
-3. Enable **Show disabled ports**.
-4. Set a host port for `8000/tcp` (example: `8000`), then click **Save**.
-5. Click **Start** (or **Restart** if already running).
-6. Wait for the log line `Listening on TCP addr=:8000`.
-7. Open **Web UI** from the app page, or browse to:
-   - `http://<home-assistant-ip>:<configured-host-port>`
-8. Point your Tronbyt/Tidbyt firmware at that server URL.
+2. Click **Start**.
+3. Wait for the log line `Listening on TCP addr=:8000`.
+4. Open **Web UI** from the app page, or browse to:
+   - `http://<home-assistant-ip>:8000`
+5. Point your Tronbyt/Tidbyt firmware at that server URL.
+
+If port `8000` is already in use:
+1. Open **Configuration -> Network**.
+2. Set `8000/tcp` to another available host port.
+3. Click **Save** and **Restart** the app.
+4. Use `http://<home-assistant-ip>:<configured-host-port>`.
 
 Example: `http://192.168.1.100:8000` (if host port is set to `8000`)
 
@@ -40,10 +43,10 @@ Notes:
 ## Network
 
 - Internal app port: `8000/tcp`
-- Host port mapping defaults to disabled (`null`) to avoid port collisions.
-- You must set a host port in the add-on Network settings for **Open Web UI** and LAN device access.
+- Default host port mapping: `8000/tcp -> 8000`
+- Host port mapping is configurable in the add-on Network settings.
 - Home Assistant Web UI link is configured automatically.
-- Devices on your LAN must be able to reach Home Assistant on the configured host port.
+- Devices on your LAN must be able to reach Home Assistant on the configured host port (default `8000`).
 
 ## Data & Persistence
 
@@ -62,7 +65,7 @@ The startup script maps Tronbyt's internal data path (`/app/data`) to this persi
 
 - Web UI unavailable:
   - Confirm the app is running.
-  - In **Configuration -> Network**, enable **Show disabled ports** and set `8000/tcp` to a host port (example: `8000`), then restart the app.
+  - If logs show a port-bind error (for example, address already in use), set `8000/tcp` to another host port in **Configuration -> Network**, then restart the app.
   - Check Home Assistant host IP and configured host port reachability.
   - Review app logs for startup errors.
 - Device connection issues:

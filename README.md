@@ -29,11 +29,11 @@ Or add it directly:
 
 ## Usage
 
-- By default, host port mapping for `8000/tcp` is disabled to avoid port collisions.
-- Before using **Open Web UI**, set a host port in **Settings -> Apps -> Tronbyt Server -> Configuration -> Network**.
-- In Network settings, enable **Show disabled ports**, set `8000/tcp` (for example `8000`), then **Save** and **Restart** the app.
+- By default, `8000/tcp` is mapped to host port `8000`.
 - Wait for the log line `Listening on TCP addr=:8000`.
-- Open the app page and use **Open Web UI**, or browse directly to `http://<home-assistant-ip>:<configured-host-port>`.
+- Open the app page and use **Open Web UI**, or browse directly to `http://<home-assistant-ip>:8000`.
+- If port `8000` is already in use on your Home Assistant host, go to **Settings -> Apps -> Tronbyt Server -> Configuration -> Network**, set `8000/tcp` to another available host port, **Save**, and **Restart**.
+- If you changed the host port, use `http://<home-assistant-ip>:<configured-host-port>`.
 - View logs from the app page to troubleshoot startup/config issues.
 
 ## Support
