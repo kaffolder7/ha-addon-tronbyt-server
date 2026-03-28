@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.12
+- Bumped upstream `tronbyt/server` from `2.2.2` to `2.2.4`.
+- Rebuilt and published updated app images for `amd64` and `aarch64`.
+- No app configuration changes required.
+
 ## 0.1.11
 - Changed default host mapping for `8000/tcp` back to `8000` so **Open Web UI** works out of the box for most users.
 - Updated docs and translation strings to reflect the default port behavior and provide clear fallback steps when `8000` is already in use.
