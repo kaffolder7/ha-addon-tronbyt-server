@@ -6,23 +6,49 @@ on:
     branches: [main]
   workflow_dispatch:
 
+env:
+  ARCHITECTURES: '["amd64", "aarch64"]'
+  IMAGE_NAME: app-tronbyt-server
+
 permissions:
   contents: read
 
 jobs:
-  build:
+  init:
+    name: Initialize build
     runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.matrix.outputs.matrix }}
     steps:
       - name: Checkout
         uses: actions/checkout@v6
 
-      - name: Test build
-        uses: home-assistant/builder@2026.03.2
+      - name: Prepare multi-arch matrix
+        id: matrix
+        uses: home-assistant/builder/actions/prepare-multi-arch-matrix@2026.03.2
         with:
-          args: >-
-            --test
-            --amd64
-            --aarch64
-            --target .
-            --docker-hub ghcr.io/${{ github.repository_owner }}
-            --image {arch}-app-tronbyt-server
+          architectures: ${{ env.ARCHITECTURES }}
+          image-name: ${{ env.IMAGE_NAME }}
+
+  build:
+    name: Test build ${{ matrix.arch }} image
+    needs: init
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.init.outputs.matrix) }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Build image (no push)
+        uses: home-assistant/builder/actions/build-image@2026.03.2
+        with:
+          arch: ${{ matrix.arch }}
+          image: ${{ matrix.image }}
+          image-tags: |
+            test-${{ github.sha }}
+          container-registry-password: ${{ secrets.GITHUB_TOKEN }}
+          version: ${{ github.sha }}
+          push: "false"
+          cosign: "false"
