@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.13
+- Bumped upstream `tronbyt/server` from `2.2.4` to `2.2.5`.
+- Rebuilt and published updated app images for `amd64` and `aarch64`.
+- No app configuration changes required.
+
 ## 0.1.12
 - Bumped upstream `tronbyt/server` from `2.2.2` to `2.2.4`.
 - Rebuilt and published updated app images for `amd64` and `aarch64`.
