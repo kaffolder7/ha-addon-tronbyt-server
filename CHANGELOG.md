@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.17
+- Added `custom_server_repo` and `custom_server_ref` options. When set, the Tronbyt Server binary is built from source (mirroring the upstream Dockerfile's CGo + libwebp + `gzip_fonts` build) on startup and replaces the bundled upstream build.
+- Compiled binaries are cached under `/data/tronbyt-build/cache/<commit>/`, so repeat starts on the same commit skip the build entirely; the three most recent builds are retained.
+- Added `git` to the runtime image to support cheap ref resolution via `git ls-remote` before deciding whether to rebuild.
+
 ## 0.1.16
 - Bumped upstream `tronbyt/server` from `2.2.7` to `2.2.8`.
 - Rebuilt and published updated app images for `amd64` and `aarch64`.
