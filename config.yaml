@@ -31,7 +31,6 @@ schema:
   system_apps_repo: "str?"
   custom_server_repo: "str?"
   custom_server_ref: "str?"
-image: "ghcr.io/kaffolder7/{arch}-app-tronbyt-server"
 panel_icon: "mdi:server-network"
 
 # Let Docker init handle zombie reaping (Tronbyt’s own compose uses init: true)
